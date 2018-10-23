@@ -1,0 +1,6 @@
+-r ./requirements-base.txt
+-r ./requirements-testing-base.txt
+-r ./requirements-dev.txt
+-r ./requirements-packaging.txt
+-r ./requirements-linting.txt
+-r ./requirements-testing.txt

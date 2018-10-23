@@ -1,0 +1,34 @@
+language: python
+
+sudo: false
+
+cache:
+  directories:
+  - "$HOME/.cache/pip"
+
+matrix:
+  fast_finish: true
+  include:
+  - python: "3.6"
+    env: TOXENV=lint
+  - python: "3.6"
+    env: TOXENV=packagecheck
+    addons:
+      apt_packages: pandoc
+  - python: "3.6"
+    env: TOXENV=py36
+
+install:
+- pip install tox
+
+script:
+- tox
+
+after_success:
+- pip install codecov
+- codecov -e TOXENV
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
