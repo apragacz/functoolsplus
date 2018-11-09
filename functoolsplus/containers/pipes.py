@@ -1,9 +1,9 @@
 from collections.abc import Callable, Mapping
 from functools import partial
 
-from functoolsplus.hof import map as generic_map
 from functoolsplus.hof import filter as generic_filter
 from functoolsplus.hof import flatmap, fold
+from functoolsplus.hof import map as generic_map
 from functoolsplus.utils.singletons import Missing
 
 
