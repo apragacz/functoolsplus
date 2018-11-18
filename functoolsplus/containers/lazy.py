@@ -20,9 +20,11 @@ Unevaluated = UnevaluatedType()
 class LazyValue(Functor):
 
     def __init__(self, value_evaluator=None, *, value=Unevaluated):
-        if value is Unevaluated and value_evaluator is None:
+        if not (bool(value is not Unevaluated) ^
+                bool(value_evaluator is not None)):
             raise ValueError(
-                "You need to provide either value_evaluator or value")
+                "You need to provide either value_evaluator or value"
+                " exclusively")
         self._value_eval = value_evaluator
         self._value = value
 

@@ -56,23 +56,23 @@ class Pipe(Callable):
         self._input_value = input_value
 
     def __or__(self, other):
-        if callable(other):
-            return self.step(other)
         if isinstance(other, Pipe):
             obj = self._clone()
             obj._steps.extend(other._steps)
-            assert other._input_value is None
+            assert other._input_value is Missing
             return obj
+        elif callable(other):
+            return self.step(other)
         return NotImplemented
 
     def __getattr__(self, name):
 
         def func(*args, **kwargs):
             obj = args[-1]
-            if hasattr(obj, name):
-                f = getattr(obj, name)
-            else:
+            if not hasattr(obj, name) and name in self._registry:
                 f = self._registry[name]
+            else:
+                f = getattr(obj, name)
             return f(*args, **kwargs)
 
         return PipeCall(self, func)

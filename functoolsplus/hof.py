@@ -85,8 +85,20 @@ class _IterableImpl(
         return cls(item for item in self if func(item))
 
     def __fold__(self, func, initial_value=Missing):
-        cls = type(self)
-        return cls(_fold_iter(self, func, initial_value))
+        obj_iter = iter(self)
+        value = initial_value
+        if value is Missing:
+            try:
+                value = next(obj_iter)
+            except StopIteration:
+                raise ValueError(
+                    f'Empty {type(self).__name__!r} object'
+                    f' but no initial value provided')
+
+        for item in obj_iter:
+            value = func(value, item)
+
+        return value
 
     def __flatmap__(self, func):
         cls = type(self)
@@ -95,18 +107,6 @@ class _IterableImpl(
     @staticmethod
     def __unit__(cls, value):
         return cls([value])
-
-
-def _fold_iter(obj, func, initial_value):
-    obj_iter = iter(obj)
-    value = initial_value
-    if value is not Missing:
-        value = next(obj_iter)
-
-    for item in obj_iter:
-        value = func(value, item)
-
-    return value
 
 
 def _flatmap_iter(obj, func):

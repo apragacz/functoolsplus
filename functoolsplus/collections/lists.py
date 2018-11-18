@@ -61,6 +61,20 @@ class SingleLinkedList(SingleLinkedStruct, Sequence):
             result = self.cons(func(item), result)
         return result
 
+    def __filter__(self, func):
+        result = self.get_empty()
+        for item in reversed(self):
+            if func(item):
+                result = self.cons(item, result)
+        return result
+
+    def __flatmap__(self, func):
+        reversed_result = self.get_empty()
+        for item in self:
+            for result_item in func(item):
+                reversed_result = self.cons(result_item, reversed_result)
+        return reversed_result.reversed()
+
     def __reversed__(self):
         return iter(self.reversed())
 
@@ -72,13 +86,13 @@ class SingleLinkedList(SingleLinkedStruct, Sequence):
             lst = lst.tail
         return reversed_list
 
-    def prepended(self, item):
+    def appended_left(self, item):
         return self.cons(item, self)
 
     def popped_left(self):
         if not self:
-            raise ValueError(f"{type(self).__name__!r} is empty")
-        return self.tail, self.head
+            raise ValueError(f"{type(self).__name__!r} object is empty")
+        return self.tail
 
     def _get_repr_items(self):
         items = []
